@@ -32,7 +32,7 @@ async function run() {
     const database = client.db("WorkOrbitDB");
     const jobCollection = database.collection("jobs");
 
-    app.post("/jobs", async (req, res) => {
+    app.post("/api/jobs", async (req, res) => {
       try {
         const job = req.body;
 
