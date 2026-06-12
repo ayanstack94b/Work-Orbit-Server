@@ -50,6 +50,31 @@ async function run() {
       }
     });
 
+    app.get("/api/jobs/company/:companyId", async (req, res) => {
+      try {
+        const companyId = req.params.companyId;
+
+        const jobs = await jobCollection.find({ companyId }).toArray();
+
+        res.send(jobs);
+      } catch (error) {
+        console.error(error);
+
+        res.status(500).send({
+          success: false,
+          message: "Failed to fetch jobs",
+        });
+      }
+    });
+
+//  export const getCompanyJobs = async (companyId) => {
+//    const res = await fetch(`${baseURL}/api/jobs/company/${companyId}`, {
+//      cache: "no-store",
+//    });
+
+//    return res.json();
+//  };
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!",
