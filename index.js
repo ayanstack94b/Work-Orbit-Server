@@ -55,8 +55,6 @@ async function run() {
       }
     });
 
-
-
     app.post("/api/jobs", async (req, res) => {
       try {
         const job = req.body;
@@ -124,13 +122,41 @@ async function run() {
       }
     });
 
-    //  export const getCompanyJobs = async (companyId) => {
-    //    const res = await fetch(`${baseURL}/api/jobs/company/${companyId}`, {
-    //      cache: "no-store",
-    //    });
+    // Edit company profile
+    app.patch("/api/company/:companyId", async (req, res) => {
+      try {
+        const companyId = req.params.companyId;
 
-    //    return res.json();
-    //  };
+        const updatedData = req.body;
+
+        const result = await companyCollection.updateOne(
+          { companyId },
+          {
+            $set: {
+              companyName: updatedData.companyName,
+              industry: updatedData.industry,
+              website: updatedData.website,
+              location: updatedData.location,
+              employeeCount: updatedData.employeeCount,
+              logoUrl: updatedData.logoUrl,
+              description: updatedData.description,
+            },
+          },
+        );
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        console.error(error);
+
+        res.status(500).send({
+          success: false,
+          message: "Failed to update company",
+        });
+      }
+    });
 
     app.get("/api/company/:companyId", async (req, res) => {
       try {
@@ -153,7 +179,6 @@ async function run() {
         });
       }
     });
-
 
     await client.db("admin").command({ ping: 1 });
     console.log(
